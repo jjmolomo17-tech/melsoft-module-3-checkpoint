@@ -1305,3 +1305,227 @@ Provides a default value only when the result is
 null or undefined.
 
 */
+
+
+
+
+
+/*********************************************************
+ Challenge 4 - Part D
+ Predict the Output (4 Marks)
+
+ Instructions:
+ For each expression:
+
+ ✅ Predict the OUTPUT
+ ✅ Predict the TYPE
+ ✅ Explain WHY
+ ✅ Verify using console.log()
+*********************************************************/
+
+
+/* =====================================================
+   1. null || undefined || 0 || "" || "finally"
+===================================================== */
+
+// Prediction Output: "finally"
+// Prediction Type: string
+//
+// Evaluation:
+// null -> falsey
+// undefined -> falsey
+// 0 -> falsey
+// "" -> falsey
+// "finally" -> first truthy value returned
+
+console.log("1:", null || undefined || 0 || "" || "finally");
+console.log("Type:", typeof (null || undefined || 0 || "" || "finally"));
+
+
+
+/* =====================================================
+   2. null ?? undefined ?? 0 ?? "" ?? "finally"
+===================================================== */
+
+// Prediction Output: 0
+// Prediction Type: number
+//
+// Evaluation:
+// null -> continue
+// undefined -> continue
+// 0 -> first NON-NULLISH value
+// Stop here
+
+console.log("2:", null ?? undefined ?? 0 ?? "" ?? "finally");
+console.log("Type:", typeof (null ?? undefined ?? 0 ?? "" ?? "finally"));
+
+
+
+/* =====================================================
+   3. 0 || "first truthy"
+===================================================== */
+
+// Prediction Output: "first truthy"
+// Prediction Type: string
+//
+// Evaluation:
+// 0 is falsey
+// Returns first truthy value
+
+console.log("3:", 0 || "first truthy");
+console.log("Type:", typeof (0 || "first truthy"));
+
+
+
+/* =====================================================
+   4. 0 ?? "first non-nullish"
+===================================================== */
+
+// Prediction Output: 0
+// Prediction Type: number
+//
+// Evaluation:
+// 0 is NOT null or undefined
+// Therefore it is returned
+
+console.log("4:", 0 ?? "first non-nullish");
+console.log("Type:", typeof (0 ?? "first non-nullish"));
+
+
+
+/* =====================================================
+   5. true && false && "never reached"
+===================================================== */
+
+// Prediction Output: false
+// Prediction Type: boolean
+//
+// Evaluation:
+// true && false
+// = false
+//
+// Short-circuit occurs.
+// Expression stops immediately.
+
+console.log("5:", true && false && "never reached");
+console.log("Type:", typeof (true && false && "never reached"));
+
+
+
+/* =====================================================
+   6. "first" && "second" && "third"
+===================================================== */
+
+// Prediction Output: "third"
+// Prediction Type: string
+//
+// Evaluation:
+// All are truthy
+// && returns the LAST value
+
+console.log("6:", "first" && "second" && "third");
+console.log("Type:", typeof ("first" && "second" && "third"));
+
+
+
+/* =====================================================
+   7. false || (true && "yes")
+===================================================== */
+
+// Prediction Output: "yes"
+// Prediction Type: string
+//
+// Evaluation:
+// true && "yes" -> "yes"
+// false || "yes" -> "yes"
+
+console.log("7:", false || (true && "yes"));
+console.log("Type:", typeof (false || (true && "yes")));
+
+
+
+/* =====================================================
+   8. (false || true) && "yes"
+===================================================== */
+
+// Prediction Output: "yes"
+// Prediction Type: string
+//
+// Evaluation:
+// false || true -> true
+// true && "yes" -> "yes"
+
+console.log("8:", (false || true) && "yes");
+console.log("Type:", typeof ((false || true) && "yes"));
+
+
+
+/* =====================================================
+   9. 1 && 2 && 3
+===================================================== */
+
+// Prediction Output: 3
+// Prediction Type: number
+//
+// Evaluation:
+// 1 is truthy
+// 2 is truthy
+// 3 is truthy
+//
+// && returns the last value
+
+console.log("9:", 1 && 2 && 3);
+console.log("Type:", typeof (1 && 2 && 3));
+
+
+
+/* =====================================================
+   10. null?.foo?.bar?.baz
+===================================================== */
+
+// Prediction Output: undefined
+// Prediction Type: undefined
+//
+// Evaluation:
+// null?.foo
+// Optional chaining stops safely
+// No error is thrown
+
+console.log("10:", null?.foo?.bar?.baz);
+console.log("Type:", typeof (null?.foo?.bar?.baz));
+
+
+
+/*********************************************************
+ SUMMARY OF RESULTS
+*********************************************************
+
+1. "finally"      -> string
+2. 0              -> number
+3. "first truthy" -> string
+4. 0              -> number
+5. false          -> boolean
+6. "third"        -> string
+7. "yes"          -> string
+8. "yes"          -> string
+9. 3              -> number
+10. undefined     -> undefined
+
+*********************************************************/
+
+
+/*********************************************************
+ INTERVIEW TAKEAWAYS
+*********************************************************
+
+1. || returns the first TRUTHY value.
+2. ?? returns the first NON-NULLISH value.
+3. && returns the first FALSEY value, or the last
+   value if all operands are truthy.
+4. Optional chaining (?.) prevents runtime errors
+   when attempting to access properties on null or
+   undefined values.
+5. 0, false, and "" are valid values for ??, but
+   they are considered falsey by ||.
+
+*********************************************************/
