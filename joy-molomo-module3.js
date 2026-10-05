@@ -1753,3 +1753,222 @@ Array.isArray([]);   // true
 Array.isArray({});   // false
 
 */
+
+
+
+
+
+/*********************************************************
+ Challenge 5 - Part B
+ instanceof with Real Types (3 Marks)
+
+ Instructions:
+ ✅ Predict the output
+ ✅ Verify using console.log()
+ ✅ Explain why
+
+ The instanceof operator checks whether an object
+ was created from a particular constructor.
+*********************************************************/
+
+
+/* =====================================================
+   1. [] instanceof Array
+===================================================== */
+
+// Prediction: true
+// Reason:
+// [] is an array object created by the Array constructor.
+
+console.log("1:", [] instanceof Array);
+
+
+
+/* =====================================================
+   2. [] instanceof Object
+===================================================== */
+
+// Prediction: true
+// Reason:
+// Arrays are special types of objects in JavaScript.
+
+console.log("2:", [] instanceof Object);
+
+
+
+/* =====================================================
+   3. {} instanceof Object
+===================================================== */
+
+// Prediction: true
+// Reason:
+// Plain objects are created from the Object constructor.
+
+console.log("3:", {} instanceof Object);
+
+
+
+/* =====================================================
+   4. "hello" instanceof String
+===================================================== */
+
+// Prediction: false
+// Reason:
+// "hello" is a primitive string, not a String object.
+
+console.log("4:", "hello" instanceof String);
+
+
+
+/* =====================================================
+   5. new String("hello") instanceof String
+===================================================== */
+
+// Prediction: true
+// Reason:
+// This creates a String object using the String constructor.
+
+console.log("5:", new String("hello") instanceof String);
+
+
+
+/* =====================================================
+   6. 42 instanceof Number
+===================================================== */
+
+// Prediction: false
+// Reason:
+// 42 is a primitive number, not a Number object.
+
+console.log("6:", 42 instanceof Number);
+
+
+
+/* =====================================================
+   7. new Date() instanceof Date
+===================================================== */
+
+// Prediction: true
+// Reason:
+// new Date() creates a Date object.
+
+console.log("7:", new Date() instanceof Date);
+
+
+
+/* =====================================================
+   8. /abc/ instanceof RegExp
+===================================================== */
+
+// Prediction: true
+// Reason:
+// /abc/ creates a regular expression object.
+
+console.log("8:", /abc/ instanceof RegExp);
+
+
+
+/*********************************************************
+ PRIMITIVES VS OBJECT WRAPPERS
+*********************************************************/
+
+// Primitive values
+
+const primitiveString = "hello";
+const primitiveNumber = 42;
+const primitiveBoolean = true;
+
+// Object wrappers
+
+const stringObject = new String("hello");
+const numberObject = new Number(42);
+const booleanObject = new Boolean(true);
+
+console.log(primitiveString instanceof String); // false
+console.log(stringObject instanceof String);    // true
+
+console.log(primitiveNumber instanceof Number); // false
+console.log(numberObject instanceof Number);    // true
+
+console.log(primitiveBoolean instanceof Boolean); // false
+console.log(booleanObject instanceof Boolean);    // true
+
+
+
+/*********************************************************
+ INTERVIEW ANSWER
+*********************************************************/
+
+/*
+
+Q: What is the ONE case where typeof is the right tool
+and instanceof is wrong?
+
+Answer:
+
+When checking primitive data types.
+
+Example:
+
+const age = 25;
+
+typeof age === "number";      // true
+age instanceof Number;        // false
+
+Reason:
+
+instanceof only works with objects created by a
+constructor. Primitive values are not instances of
+Number, String, or Boolean objects.
+
+
+
+---------------------------------------------------------
+
+Q: What is the ONE case where instanceof is the right
+tool and typeof is wrong?
+
+Answer:
+
+When distinguishing specific object types such as
+Array, Date, or RegExp.
+
+Example:
+
+typeof [];                // "object"
+typeof new Date();        // "object"
+
+These results are too generic.
+
+instanceof gives more detail:
+
+[] instanceof Array;      // true
+new Date() instanceof Date; // true
+
+Reason:
+
+typeof returns "object" for many different object
+types, while instanceof can identify the actual
+constructor used to create them.
+
+
+
+---------------------------------------------------------
+
+Summary
+
+Use typeof for:
+✔ string
+✔ number
+✔ boolean
+✔ undefined
+✔ function
+
+Use instanceof for:
+✔ Array
+✔ Date
+✔ RegExp
+✔ Custom Classes
+✔ Constructor-created Objects
+
+*/
