@@ -77,8 +77,8 @@ console.log("Final Cart Total:", cartTotal.toFixed(2));
 
 const age = 22;
 const password = "MySecurePass123";
-const email = "user@email.com";
-const confirmEmail = "user@email.com";
+const email = "jjmolomo17@gmail.com";
+const confirmEmail = "jjmolomo17@gmail.com";
 
 // Comparison checks
 const isOldEnough = age >= 18;
@@ -577,3 +577,154 @@ one of the most frequently tested interview topics.
 
 
 
+
+/*********************************************************
+ Challenge 2 - Part B: Real-World Form Validator
+ Password Reset Form Validation
+
+ Requirements:
+ ✔ Passwords must match EXACTLY
+ ✔ Emails must match EXACTLY
+ ✔ Password cannot be the same as email
+ ✔ Password must be at least 8 characters
+
+ The script is run with:
+ 1. One passing test case
+ 2. One failing test case
+*********************************************************/
+
+
+/* =====================================================
+   Validation Function
+===================================================== */
+
+function validatePasswordReset(
+  newPassword,
+  confirmPassword,
+  currentEmail,
+  confirmEmail
+) {
+  console.log("\n=================================");
+  console.log("Password Reset Validation Results");
+  console.log("=================================");
+
+  /* -------------------------------------
+     Check 1:
+     Passwords match exactly
+  ------------------------------------- */
+
+  if (newPassword === confirmPassword) {
+    console.log("✅ PASS: Passwords match exactly.");
+  } else {
+    console.log("❌ FAIL: Passwords do not match.");
+  }
+
+  /* -------------------------------------
+     Check 2:
+     Emails match exactly
+  ------------------------------------- */
+
+  if (currentEmail === confirmEmail) {
+    console.log("✅ PASS: Emails match exactly.");
+  } else {
+    console.log("❌ FAIL: Emails do not match.");
+  }
+
+  /* -------------------------------------
+     Check 3:
+     Password must NOT be same as email
+  ------------------------------------- */
+
+  if (newPassword !== currentEmail) {
+    console.log("✅ PASS: Password is different from email.");
+  } else {
+    console.log(
+      "❌ FAIL: Password should not be the same as your email."
+    );
+  }
+
+  /* -------------------------------------
+     Check 4:
+     Password length must be at least 8
+  ------------------------------------- */
+
+  if (newPassword.length >= 8) {
+    console.log("✅ PASS: Password is at least 8 characters.");
+  } else {
+    console.log(
+      "❌ FAIL: Password must be at least 8 characters."
+    );
+  }
+}
+
+
+
+/* =====================================================
+   TEST CASE 1
+   Expected: ALL CHECKS PASS
+===================================================== */
+
+console.log("\nTEST CASE 1 - VALID DATA");
+
+let newPassword = "SecurePass123";
+let confirmPassword = "SecurePass123";
+let currentEmail = "jjmolomo17@gmail.com";
+let confirmEmailReset = "jjmolomo17@gmail.com";
+
+validatePasswordReset(
+  newPassword,
+  confirmPassword,
+  currentEmail,
+  confirmEmail
+);
+
+
+
+/* =====================================================
+   TEST CASE 2
+   Expected:
+   FAIL at least two checks
+===================================================== */
+
+console.log("\nTEST CASE 2 - INVALID DATA");
+
+newPassword = "john@mail";       // Same as email & too short
+confirmPassword = "john123";     // Doesn't match password
+currentEmail = "john@mail";
+confirmEmail = "john@gmail.com"; // Doesn't match email
+
+validatePasswordReset(
+  newPassword,
+  confirmPassword,
+  currentEmail,
+  confirmEmail
+);
+
+
+
+/*********************************************************
+ INTERVIEW ANSWER
+*********************************************************/
+
+/*
+
+Q: Which equality operator did you use (== or ===),
+and why does that choice matter specifically for
+password validation?
+
+Answer:
+
+I used the strict equality operator (===).
+
+Reason:
+
+=== compares BOTH:
+
+1. Value
+2. Data Type
+
+without performing
+
+
+
+*/
