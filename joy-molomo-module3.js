@@ -1045,15 +1045,7 @@ percentages.forEach((percentage) => {
  ✔ lastLogin defaults to "Never" using ??
  ✔ notificationCount defaults to 0 using ??
 
- Test with:
- 1. User object with all fields missing
- 2. User object where:
-    - notificationCount = 0
-    - theme = ""
-
- Demonstrates the difference between:
- - Logical OR (||)
- - Nullish Coalescing (??)
+ Uses unique variable names to avoid redeclaration errors.
 *********************************************************/
 
 
@@ -1062,77 +1054,63 @@ percentages.forEach((percentage) => {
    All fields missing
 ===================================================== */
 
-const user1 = {};
+const missingUserProfile = {};
 
-const profile1 = {
-  // If displayName is undefined, use default
-  displayName: user1.displayName || "Guest User",
+const processedProfile1 = {
+  displayName: missingUserProfile.displayName || "Guest User",
 
-  // If theme is undefined, use default
-  theme: user1.theme || "light",
+  theme: missingUserProfile.theme || "light",
 
-  // If maxResults is undefined, use default
-  maxResults: user1.maxResults || 10,
+  maxResults: missingUserProfile.maxResults || 10,
 
-  // Only defaults when value is null or undefined
-  lastLogin: user1.lastLogin ?? "Never",
+  lastLogin: missingUserProfile.lastLogin ?? "Never",
 
-  // Only defaults when value is null or undefined
-  notificationCount: user1.notificationCount ?? 0,
+  notificationCount:
+    missingUserProfile.notificationCount ?? 0,
 };
 
-console.log("===== USER 1 =====");
-console.log(profile1);
+console.log("===== USER PROFILE 1 =====");
+console.log(processedProfile1);
 
 
 
 /* =====================================================
    TEST CASE 2
-   theme = ""
-   notificationCount = 0
+   Theme = ""
+   Notification Count = 0
 ===================================================== */
 
-const user2 = {
+const apiUserProfile = {
   displayName: "Joy Molomo",
-  theme: "",                 // Empty string
+  theme: "",
   maxResults: 25,
   lastLogin: "2025-09-15",
-  notificationCount: 0,      // Valid value
+  notificationCount: 0,
 };
 
-const profile2 = {
-  displayName: user2.displayName || "Guest User",
+const processedProfile2 = {
+  displayName: apiUserProfile.displayName || "Guest User",
 
-  // || treats "" as falsey, so "light" is used
-  theme: user2.theme || "light",
+  theme: apiUserProfile.theme || "light",
 
-  maxResults: user2.maxResults || 10,
+  maxResults: apiUserProfile.maxResults || 10,
 
-  // ?? only checks for null or undefined
-  lastLogin: user2.lastLogin ?? "Never",
+  lastLogin: apiUserProfile.lastLogin ?? "Never",
 
-  // 0 is NOT null or undefined
-  // therefore 0 is kept
-  notificationCount: user2.notificationCount ?? 0,
+  notificationCount:
+    apiUserProfile.notificationCount ?? 0,
 };
 
-console.log("\n===== USER 2 =====");
-console.log(profile2);
+console.log("\n===== USER PROFILE 2 =====");
+console.log(processedProfile2);
 
 
-
-/*********************************************************
- EXPLANATION OF || VS ??
-*********************************************************/
 
 /*
 
-LOGICAL OR (||)
-===============
-Returns the value on the right when the value on the
-left is "falsey".
+WHY || AND ?? BEHAVE DIFFERENTLY
 
-Falsey values include:
+|| treats ALL falsey values as missing:
 
 false
 0
@@ -1144,70 +1122,186 @@ NaN
 Example:
 
 "" || "light"
-
-Result:
-"light"
-
-Because an empty string ("") is considered falsey.
+Result: "light"
 
 
-
-NULLISH COALESCING (??)
-=======================
-Returns the value on the right ONLY when the value on
-the left is:
-
-null
-undefined
+?? only treats null and undefined as missing.
 
 Example:
 
 0 ?? 10
+Result: 0
 
-Result:
-0
+Therefore:
 
-Because 0 is not null or undefined.
+theme = ""
 
-
-
-WHY THE RESULTS DIFFER
-======================
-
-For theme:
-
-theme: "" || "light"
-
-Result:
-"light"
-
-The empty string is falsey, so || uses the default.
+"" || "light"
+Result: "light"
 
 
-For notificationCount:
+notificationCount = 0
 
-notificationCount: 0 ?? 0
+0 ?? 0
+Result: 0
 
-Result:
-0
+The value 0 is preserved because it is a valid number.
 
-The value 0 is a valid number and is NOT null or
-undefined, so ?? keeps the original value.
+*/
 
 
-INTERVIEW TIP
-=============
 
-Use || when you want to replace ANY falsey value.
 
-Use ?? when you only want to replace null or undefined
-while preserving valid values like:
 
-0
-false
-""
+/*********************************************************
+ Challenge 4 - Part C
+ Guard Clauses with && and ?.
 
-This makes ?? safer for numbers, counters, settings,
-and API responses.
+ Requirements:
+
+ 1. && Guard Clauses
+ 2. Optional Chaining (?.)
+ 3. Optional Chaining + Default Value (??)
+
+ Uses unique variable names to avoid redeclaration errors.
+*********************************************************/
+
+
+/* =====================================================
+   TEST DATA
+===================================================== */
+
+// User with full address information
+const fullUserData = {
+  name: "Joy",
+  address: {
+    city: "Johannesburg",
+  },
+};
+
+// User missing address
+const userWithoutAddress = {
+  name: "Joy",
+};
+
+// User is null
+const nullUserData = null;
+
+
+
+/* =====================================================
+   TECHNIQUE 1
+   && Guard Clauses
+===================================================== */
+
+console.log("\n===== TECHNIQUE 1: && GUARD CLAUSES =====");
+
+console.log(
+  "Full User:",
+  fullUserData &&
+    fullUserData.address &&
+    fullUserData.address.city
+);
+
+console.log(
+  "Missing Address:",
+  userWithoutAddress &&
+    userWithoutAddress.address &&
+    userWithoutAddress.address.city
+);
+
+console.log(
+  "Null User:",
+  nullUserData &&
+    nullUserData.address &&
+    nullUserData.address.city
+);
+
+
+
+/* =====================================================
+   TECHNIQUE 2
+   Optional Chaining
+===================================================== */
+
+console.log("\n===== TECHN*QUE 2: OPTIONAL CHAINING =====");
+console.log(
+  "Full User:",
+  ful*UserData?.address?.city
+);
+
+console.log(
+  "Missing Address:",
+  userWithoutAddress?.address?.city
+);
+
+console.log(
+  "Null User:",
+  nullUserData?.address?.city
+);
+
+
+
+/* =====================================================
+   TECHNIQUE 3
+   Optional Chaining + Default Value
+===================================================== */
+
+console.log("\n===== TECHNIQUE *: ?. + ?? =====");
+
+console.log(
+ "Full User:",
+  fullUserData?.addr*ss?.city ??
+    "Unknown city"
+);
+console.log(
+  "Missing Address:",  userWithoutAddress?.address?.city ??
+    "Unknown city"
+);
+
+console.log(
+  "Null User:",
+  nullUserData?.address?.city ??
+    "Unknown city"
+);
+
+
+
+/*
+
+EXPECTED OUTPUT
+
+===== TECHNIQUE 1: && GUARD CLAUSES =====
+
+Full User: Johannesburg
+Missing Address: undefined
+Null User: null
+
+
+===== TECHNIQUE 2: OPTIONAL CHAINING =====
+
+Full User: Johannesburg
+Missing Address: undefined
+Null User: undefined
+
+
+===== TECHNIQUE 3: ?. + ?? =====
+
+Full User: Johannesburg
+Missing Address: Unknown city
+Null User: Unknown city
+
+
+EXPLANATION
+
+&& Guard Clauses:
+Stops as soon as a value is missing.
+
+Optional Chaining (?.):
+Safely accesses nested properties without throwing errors.
+
+Nullish Coalescing (??):
+Provides a default value only when the result is
+null or undefined.
 
 */
