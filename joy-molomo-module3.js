@@ -2121,3 +2121,210 @@ console.log('After filter:', withoutB, '| original untouched:', original);
 
 // Other useful methods: pop() removes the last item, shift() removes the
 // first item, and toSpliced() (ES2023) is a non-mutating version of splice.
+
+
+
+
+
+
+// ============================================================
+// Challenge 6 — Bitwise Operators & Permission System
+// Each permission is ONE BIT, so many permissions fit in ONE number.
+// ============================================================
+
+// Everything below is wrapped in an IIFE (immediately invoked function
+// expression) so its variables (user, READ, WRITE, bin, ...) live in a
+// private scope and can NEVER clash with variables from other challenges
+// in the same file (e.g. "Cannot redeclare block-scoped variable 'user'").
+(function challenge6() {
+
+  // Permission flags: each is a power of 2 (a single bit set)
+  const READ   = 1; // binary 0001
+  const WRITE  = 2; // binary 0010
+  const DELETE = 4; // binary 0100
+  const ADMIN  = 8; // binary 1000
+
+  // Helper: show a number as a 4-bit binary string (e.g. 3 -> "0011")
+  // so the output makes the bits visible.
+  const bin = (n) => n.toString(2).padStart(4, '0');
+
+  // ------------------------------------------------------------
+  // 1. Create a user with READ + WRITE using | (OR)
+  // ------------------------------------------------------------
+  console.log('--- 1. User with READ + WRITE ---');
+
+  // OR sets a bit to 1 if it is 1 in EITHER number:
+  //   0001 (READ)
+  // | 0010 (WRITE)
+  // = 0011 (3)
+  let user = READ | WRITE;
+
+  console.log('user =', user, '| binary:', bin(user)); // 3 | 0011
+
+  // ------------------------------------------------------------
+  // 2. Create an admin user with ALL permissions
+  // ------------------------------------------------------------
+  console.log('\n--- 2. Admin with ALL permissions ---');
+
+  // 0001 | 0010 | 0100 | 1000 = 1111 (15)
+  const adminUser = READ | WRITE | DELETE | ADMIN;
+
+  console.log('adminUser =', adminUser, '| binary:', bin(adminUser)); // 15 | 1111
+
+  // ------------------------------------------------------------
+  // 3. Check if the user has READ using & (AND)
+  // ------------------------------------------------------------
+  console.log('\n--- 3. Does user have READ? ---');
+
+  // AND keeps a bit only if it is 1 in BOTH numbers. Anding with a flag
+  // isolates that one bit: result is the flag itself (truthy) if the user
+  // has it, or 0 (falsy) if not.
+  //   0011 (user)
+  // & 0001 (READ)
+  // = 0001 -> truthy -> "Yes"
+  console.log('user & READ =', user & READ);
+  console.log((user & READ) ? 'Yes' : 'No'); // Yes
+
+  // ------------------------------------------------------------
+  // 4. Check if the user has DELETE using &
+  // ------------------------------------------------------------
+  console.log('\n--- 4. Does user have DELETE? ---');
+
+  //   0011 (user)
+  // & 0100 (DELETE)
+  // = 0000 -> 0 is falsy -> "No"
+  console.log('user & DELETE =', user & DELETE);
+  console.log((user & DELETE) ? 'Yes' : 'No'); // No
+
+  // ------------------------------------------------------------
+  // 5. Grant DELETE using |= (compound bitwise OR assignment)
+  // ------------------------------------------------------------
+  console.log('\n--- 5. Grant DELETE ---');
+
+  // user |= DELETE is shorthand for: user = user | DELETE
+  // OR turns the DELETE bit on and leaves the other bits untouched.
+  //   0011 (user)
+  // | 0100 (DELETE)
+  // = 0111 (7)
+  user |= DELETE;
+
+  console.log('user =', user, '| binary:', bin(user));                  // 7 | 0111
+  console.log('Has DELETE now?', (user & DELETE) ? 'Yes' : 'No');       // Yes
+
+  // ------------------------------------------------------------
+  // 6. Revoke WRITE using & with ~ (NOT)  <-- the tricky one
+  // ------------------------------------------------------------
+  console.log('\n--- 6. Revoke WRITE ---');
+
+  // Step 1: ~WRITE flips EVERY bit of WRITE:
+  //   WRITE  = 0010
+  //   ~WRITE = 1101 (in 4 bits; really 32 bits: ...11111101, which is -3)
+  // Step 2: & with that "mask" keeps every bit EXCEPT the WRITE bit,
+  //         which is forced to 0:
+  //   0111 (user)
+  // & 1101 (~WRITE)
+  // = 0101 (5)
+  // Shorthand: user &= ~WRITE   (same as user = user & ~WRITE)
+  user &= ~WRITE;
+
+  console.log('~WRITE =', ~WRITE);                                       // -3
+  console.log('user =', user, '| binary:', bin(user));                   // 5 | 0101
+  console.log('Has WRITE now?', (user & WRITE) ? 'Yes' : 'No');          // No
+  console.log('Still has READ?', (user & READ) ? 'Yes' : 'No');          // Yes
+  console.log('Still has DELETE?', (user & DELETE) ? 'Yes' : 'No');      // Yes
+
+  // ------------------------------------------------------------
+  // 7. Toggle ADMIN using ^ (XOR)
+  // ------------------------------------------------------------
+  console.log('\n--- 7. Toggle ADMIN with XOR ---');
+
+  // XOR sets a bit to 1 only if the two bits are DIFFERENT. XOR-ing with a
+  // flag flips that one bit: off -> on, on -> off. Other bits are unchanged.
+  function toggleAdmin(perms) {
+    return perms ^ ADMIN;
+  }
+
+  console.log('Start:        ', user, '|', bin(user));      // 5  | 0101 (no ADMIN)
+  user = toggleAdmin(user);
+  console.log('Toggle #1 (on): ', user, '|', bin(user));    // 13 | 1101 (ADMIN on)
+  user = toggleAdmin(user);
+  console.log('Toggle #2 (off):', user, '|', bin(user));    // 5  | 0101 (ADMIN off)
+
+  // ------------------------------------------------------------
+  // 8. Add SUPER_ADMIN with << (left shift), no hardcoded 16
+  // ------------------------------------------------------------
+  console.log('\n--- 8. Add SUPER_ADMIN with << ---');
+
+  // Left shift moves all bits left, so 1 << n equals 2 to the power n.
+  // Each new permission is the next power of 2:
+  //   ADMIN is 1000 (8), so shifting it left by 1 gives 10000 (16).
+  // Better still, define every flag with << so you never type numbers
+  // by hand:  1 << 0 = 1, 1 << 1 = 2, 1 << 2 = 4, 1 << 3 = 8, 1 << 4 = 16
+  const SUPER_ADMIN = ADMIN << 1; // 16, binary 10000
+
+  console.log('SUPER_ADMIN =', SUPER_ADMIN, '| binary:', SUPER_ADMIN.toString(2)); // 16 | 10000
+
+  // Our 4-bit helper would cut off the 5th bit, so use a plain toString(2).
+  const everything = adminUser | SUPER_ADMIN; // 11111 (31)
+  console.log('Everything =', everything, '| binary:', everything.toString(2));
+  console.log('Has SUPER_ADMIN?', (everything & SUPER_ADMIN) ? 'Yes' : 'No'); // Yes
+
+  // ============================================================
+  // INTERVIEW ANSWERS
+  // ============================================================
+
+  // ------------------------------------------------------------
+  // Q1. Why use bitwise flags instead of an array like ['read', 'write']?
+  // ------------------------------------------------------------
+  // Reason 1 - Memory and storage: a whole permission set is ONE integer
+  //   (e.g. 5) instead of an array of strings. That is one small database
+  //   column, a tiny JWT claim, and a very small network payload.
+  // Reason 2 - Speed and simplicity of checks: testing, granting and
+  //   revoking a permission is a single CPU operation (&, |, &= ~) with no
+  //   looping or string comparison like array.includes('read'). Combining
+  //   two permission sets is also one operation: (a | b).
+  //   Bonus: no typos like 'raed', since flags are constants.
+
+  // ------------------------------------------------------------
+  // Q2. Downsides? When would you NOT use this pattern?
+  // ------------------------------------------------------------
+  // - Readability: 13 in a database means nothing without decoding it, so
+  //   debugging and manual SQL queries are harder than reading 'read,write'.
+  // - Hard limit: JavaScript bitwise operators work on 32-bit integers, so
+  //   you get at most 31-32 flags (BigInt is needed beyond that).
+  // - Inflexible: flags can't hold extra data (e.g. "can edit only
+  //   project 42") and renaming/reordering flags breaks stored values.
+  // Don't use it when permissions are numerous, dynamic, user-defined, or
+  // resource-specific (use roles/ACL tables or an array/object), or when
+  // readability matters more than saving a few bytes.
+
+  // ------------------------------------------------------------
+  // Q3. Difference between & and &&, and | and ||
+  // ------------------------------------------------------------
+  // & and | are BITWISE: they compare numbers bit by bit and return a NUMBER.
+  // && and || are LOGICAL: they treat each side as true/false, short-circuit
+  // (stop early), and return one of the original VALUES.
+
+  console.log('\n--- Q3 demo: the silent bug ---');
+
+  const viewer = WRITE; // this user has ONLY write permission (0010)
+
+  // CORRECT: bitwise & checks the actual READ bit
+  console.log('Correct (&):  has READ?', (viewer & READ) ? 'Yes' : 'No');   // No
+
+  // BUG: && only asks "are both values truthy?". viewer (2) is truthy and
+  // READ (1) is truthy, so it returns READ (1) and wrongly says Yes. No error
+  // is thrown, so the user is silently given access they should not have.
+  console.log('Buggy (&&):    has READ?', (viewer && READ) ? 'Yes' : 'No');  // Yes (WRONG)
+
+  // Same trap with | vs ||: combining flags.
+  const goodPerms = READ | WRITE;  // 3 (0011) - both flags combined
+  const badPerms  = READ || WRITE; // 1 - || short-circuits: READ is truthy,
+                                   // so it returns READ and never looks at WRITE
+  console.log('READ | WRITE  =', goodPerms); // 3
+  console.log('READ || WRITE =', badPerms);  // 1 (WRITE silently lost)
+})();
+
+
+
+
