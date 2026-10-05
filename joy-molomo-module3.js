@@ -2328,3 +2328,178 @@ console.log('After filter:', withoutB, '| original untouched:', original);
 
 
 
+
+// ============================================================
+// Challenge 7 — Real-World Banking Calculator
+// Procedural style: variables and operators only (no functions yet).
+//
+// Everything is inside a { } block so its variables are private and
+// cannot clash with other challenges in the same file.
+// ============================================================
+{
+  // ----------------------------------------------------------
+  // Currency formatting recipe (used several times below, written
+  // out each time because we are not using functions yet):
+  //   1. amount.toFixed(2)  -> string with exactly 2 decimals, e.g. "31286.15"
+  //   2. .replace(/\B(?=(\d{3})+(?!\d))/g, ',') -> inserts a comma before
+  //      every group of 3 digits counted from the right: "31,286.15"
+  //      (The decimals are only 2 digits, so no comma is added there.)
+  //   3. Add the symbol in front: 'R ' + ...  or  '$' + ...
+  // ----------------------------------------------------------
+
+  // ==========================================================
+  // SCENARIO 1 — Savings interest
+  // ==========================================================
+  console.log('=== SCENARIO 1: Savings interest ===');
+
+  const P = 25000;   // principal (initial deposit) in Rands
+  const r = 0.075;   // annual interest rate (7.5%)
+  const n = 12;      // times compounded per year (monthly)
+  const t = 3;       // years
+
+  // Compound interest formula: A = P * (1 + r/n)^(n*t)
+  // ** is the exponent operator (same as Math.pow)
+  const finalBalance = P * (1 + r / n) ** (n * t);
+
+  // Total interest earned = final balance - initial deposit
+  const totalInterest = finalBalance - P;
+
+  // Effective annual rate (EAR): the real yearly growth including compounding.
+  // Total growth factor is finalBalance / P. Taking the t-th root gives the
+  // growth factor PER YEAR, and subtracting 1 turns it into a percentage.
+  const effectiveRate = ((finalBalance / P) ** (1 / t) - 1) * 100;
+
+  // Format as 'R XX,XXX.XX'
+  const finalBalanceText = 'R ' + finalBalance.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const initialText      = 'R ' + P.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const interestText     = 'R ' + totalInterest.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  console.log('Initial deposit:        ', initialText);
+  console.log('Final balance (3 yrs):  ', finalBalanceText);
+  console.log('Total interest earned:  ', interestText);
+  console.log('Effective annual rate:  ', effectiveRate.toFixed(2) + '%');
+  // The effective rate (about 7.76%) is HIGHER than the advertised 7.5%
+  // because interest is added every month and then earns interest itself.
+
+  // ==========================================================
+  // SCENARIO 2 — Tiered account fees (ternary operators ONLY)
+  // ==========================================================
+  console.log('\n=== SCENARIO 2: Tiered account fees ===');
+
+  // Test balances
+  const balance1 = 500;
+  const balance2 = 1500;
+  const balance3 = 10000;
+  const balance4 = 50000;
+
+  // One chained ternary expression: condition ? valueIfTrue : (next ternary...)
+  // It reads top to bottom and stops at the first condition that is true:
+  //   balance < 1000   -> R 25
+  //   balance < 5000   -> R 50
+  //   balance < 25000  -> R 75
+  //   otherwise        -> R 0 (fee waived)
+  // Because we check in ascending order, each step only needs ONE comparison.
+  const fee1 = balance1 < 1000 ? 25 : balance1 < 5000 ? 50 : balance1 < 25000 ? 75 : 0;
+  const fee2 = balance2 < 1000 ? 25 : balance2 < 5000 ? 50 : balance2 < 25000 ? 75 : 0;
+  const fee3 = balance3 < 1000 ? 25 : balance3 < 5000 ? 50 : balance3 < 25000 ? 75 : 0;
+  const fee4 = balance4 < 1000 ? 25 : balance4 < 5000 ? 50 : balance4 < 25000 ? 75 : 0;
+
+  // Annual fee impact = monthly fee x 12 months
+  const annual1 = fee1 * 12;
+  const annual2 = fee2 * 12;
+  const annual3 = fee3 * 12;
+  const annual4 = fee4 * 12;
+
+  console.log('Balance R 500    -> monthly fee: R', fee1, '| annual fees: R', annual1); // 25 | 300
+  console.log('Balance R 1,500  -> monthly fee: R', fee2, '| annual fees: R', annual2); // 50 | 600
+  console.log('Balance R 10,000 -> monthly fee: R', fee3, '| annual fees: R', annual3); // 75 | 900
+  console.log('Balance R 50,000 -> monthly fee: R', fee4, '| annual fees: R', annual4); // 0  | 0
+
+  // ==========================================================
+  // SCENARIO 3 — Multi-currency transfer with floating-point care
+  // ==========================================================
+  console.log('\n=== SCENARIO 3: Multi-currency transfer ===');
+
+  const sendAmountZAR = 15750.33; // amount the customer wants to send
+  const exchangeRate  = 18.42;    // 1 USD = R 18.42
+  // Commission is 2.5%. As a fraction that is 25/1000, so we use the
+  // integers 25 and 1000 (see the cents approach below).
+
+  // FLOATING-POINT CARE: convert money to whole CENTS (integers) first.
+  // Integers are stored exactly, so adding/subtracting cents has no
+  // rounding drift. Math.round removes any tiny error from the conversion
+  // (for this amount the result happens to be exact, but other amounts are
+  // not, e.g. 1.0049999 * 100 gives 100.49999000000001).
+  const sendCents = Math.round(sendAmountZAR * 100);        // 1,575,033 cents
+
+  // Commission in cents: 2.5% of the amount, rounded to a whole cent.
+  // (multiply first, divide last, so we keep precision as long as possible)
+  const commissionCents = Math.round(sendCents * 25 / 1000);
+
+  // ZAR after commission (exact integer subtraction)
+  const afterCommissionCents = sendCents - commissionCents;
+
+  // USD received: ZAR after commission / exchange rate.
+  // USD cents = ZAR cents / 18.42. Multiplying top and bottom by 100 turns
+  // the rate into the integer 1842, avoiding the inexact decimal 18.42.
+  const usdCents = Math.round(afterCommissionCents * 100 / 1842);
+
+  // Convert cents back to Rands/Dollars ONLY for display, then format
+  const commissionText = 'R ' + (commissionCents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const afterText      = 'R ' + (afterCommissionCents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const sendText       = 'R ' + (sendCents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const usdText        = '$' + (usdCents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  console.log('Amount to send:          ', sendText);
+  console.log('Commission (2.5%):       ', commissionText);
+  console.log('ZAR after commission:    ', afterText);
+  console.log('Exchange rate:            1 USD = R', exchangeRate);
+  console.log('USD amount received:     ', usdText);
+
+  // Proof of the problem we avoided: the naive way, all in decimals
+  console.log('\n--- Floating-point demo ---');
+  console.log('0.1 + 0.2 =', 0.1 + 0.2);                  // 0.30000000000000004
+  console.log('0.1 + 0.2 === 0.3 ?', 0.1 + 0.2 === 0.3);  // false
+  console.log('Naive commission:', sendAmountZAR * 0.025); // 393.75825 (fraction of a cent!)
+
+  // ==========================================================
+  // FINAL QUESTION (answer in comments)
+  // "Where did floating-point precision cause a potential problem?
+  //  How did you handle it?"
+  // ==========================================================
+  // JavaScript stores every number as a 64-bit binary float. Many decimal
+  // values like 0.1, 0.2 or 15750.33 cannot be represented exactly in
+  // binary, so they are stored as very close approximations. Tiny errors
+  // can appear, and with money they can add up or make comparisons wrong.
+  //
+  // Where it could have gone wrong:
+  //  1. Scenario 3, the amount: converting decimals to cents with * 100
+  //     can leave tiny errors (e.g. 1.0049999 * 100 = 100.49999000000001),
+  //     which could lose a cent if truncated. Math.round() guards against it.
+  //  2. Scenario 3, the commission: 2.5% of 15750.33 is 393.75825, which has
+  //     a fraction of a cent (the naive calculation even prints
+  //     393.75825000000003). Real money must be a whole number of cents, so
+  //     the value must be rounded deliberately, not left to chance.
+  //  3. Scenario 3, the exchange rate: 18.42 is not stored exactly, so
+  //     dividing by it adds a small error.
+  //  4. Scenario 1: ** with fractional values (1 + 0.075/12) is approximate,
+  //     so the final balance carries tiny errors; only the DISPLAY is rounded.
+  //  5. Any === comparison on decimals (0.1 + 0.2 === 0.3 is false).
+  //
+  // How I handled it:
+  //  - Converted money to integer CENTS with Math.round() before doing
+  //    arithmetic. Whole numbers are stored exactly, so adding and
+  //    subtracting cents has no drift.
+  //  - Multiplied first and divided last (sendCents * 25 / 1000, and
+  //    * 100 / 1842) so the decimal rate 18.42 became the integer 1842.
+  //  - Used Math.round() at each step so the commission and conversion are
+  //    rounded to a whole cent exactly once and in a known way.
+  //  - Used .toFixed(2) ONLY at the very end for display, never to carry
+  //    values forward, because it returns a string.
+  //  - In production, you would use integer cents everywhere or a decimal
+  //    library (like decimal.js) or BigInt, and never compare floats with ===.
+}
+
+
+
+
