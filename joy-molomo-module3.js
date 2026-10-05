@@ -283,3 +283,297 @@ This improves readability, debugging, and maintainability.
 
 
 
+
+/*********************************************************
+ Challenge 2 - The Equality Deep Dive
+ JavaScript Equality & Comparison Operators
+
+ Instructions:
+ - Prediction written BEFORE execution
+ - Actual result logged
+ - One-line explanation provided for each case
+*********************************************************/
+
+
+/* =====================================================
+   1. 0 == false
+===================================================== */
+
+// Prediction: true
+// Reason: Loose equality converts false to 0 before comparing.
+console.log("1:", 0 == false);
+
+
+/* =====================================================
+   2. 0 === false
+===================================================== */
+
+// Prediction: false
+// Reason: Strict equality compares both value and type.
+console.log("2:", 0 === false);
+
+
+/* =====================================================
+   3. "" == 0
+===================================================== */
+
+// Prediction: true
+// Reason: Empty string converts to number 0 during coercion.
+console.log("3:", "" == 0);
+
+
+/* =====================================================
+   4. "" === 0
+===================================================== */
+
+// Prediction: false
+// Reason: String and number are different types.
+console.log("4:", "" === 0);
+
+
+/* =====================================================
+   5. "0" == 0
+===================================================== */
+
+// Prediction: true
+// Reason: String "0" is converted to numeric 0.
+console.log("5:", "0" == 0);
+
+
+/* =====================================================
+   6. "0" === 0
+===================================================== */
+
+// Prediction: false
+// Reason: One is a string, the other is a number.
+console.log("6:", "0" === 0);
+
+
+/* =====================================================
+   7. null == undefined
+===================================================== */
+
+// Prediction: true
+// Reason: JavaScript treats null and undefined as equal
+// under loose equality only.
+console.log("7:", null == undefined);
+
+
+/* =====================================================
+   8. null === undefined
+===================================================== */
+
+// Prediction: false
+// Reason: Different data types.
+console.log("8:", null === undefined);
+
+
+/* =====================================================
+   9. null == 0
+===================================================== */
+
+// Prediction: false
+// Reason: null only loosely equals undefined.
+console.log("9:", null == 0);
+
+
+/* =====================================================
+   10. null >= 0
+===================================================== */
+
+// Prediction: true
+// Reason: For relational comparisons, null converts to 0.
+// Therefore 0 >= 0 is true.
+console.log("10:", null >= 0);
+
+
+/* =====================================================
+   11. null > 0
+===================================================== */
+
+// Prediction: false
+// Reason: null becomes 0, and 0 > 0 is false.
+console.log("11:", null > 0);
+
+
+/* =====================================================
+   12. NaN == NaN
+===================================================== */
+
+// Prediction: false
+// Reason: NaN is never equal to anything, including itself.
+console.log("12:", NaN == NaN);
+
+
+/* =====================================================
+   13. NaN === NaN
+===================================================== */
+
+// Prediction: false
+// Reason: Even strict equality cannot match NaN to itself.
+console.log("13:", NaN === NaN);
+
+
+/* =====================================================
+   14. Object.is(NaN, NaN)
+===================================================== */
+
+// Prediction: true
+// Reason: Object.is correctly recognizes NaN as equal to NaN.
+console.log("14:", Object.is(NaN, NaN));
+
+
+/* =====================================================
+   15. +0 === -0
+===================================================== */
+
+// Prediction: true
+// Reason: Strict equality treats positive and negative zero
+// as the same value.
+console.log("15:", +0 === -0);
+
+
+/* =====================================================
+   16. Object.is(+0, -0)
+===================================================== */
+
+// Prediction: false
+// Reason: Object.is can distinguish +0 from -0.
+console.log("16:", Object.is(+0, -0));
+
+
+/* =====================================================
+   17. [1,2,3] == "1,2,3"
+===================================================== */
+
+// Prediction: true
+// Reason: Array converts to string "1,2,3".
+console.log("17:", [1, 2, 3] == "1,2,3");
+
+
+/* =====================================================
+   18. [] == false
+===================================================== */
+
+// Prediction: true
+// Reason: [] -> "" -> 0 and false -> 0.
+console.log("18:", [] == false);
+
+
+/* =====================================================
+   19. [] == 0
+===================================================== */
+
+// Prediction: true
+// Reason: Empty array becomes empty string, then number 0.
+console.log("19:", [] == 0);
+
+
+/* =====================================================
+   20. [0] == false
+===================================================== */
+
+// Prediction: true
+// Reason: [0] becomes "0", then numeric 0.
+// false also becomes 0.
+console.log("20:", [0] == false);
+
+
+
+/*********************************************************
+ SUMMARY NOTES
+*********************************************************/
+
+/*
+
+Most Common Interview Traps
+===========================
+
+1. Loose Equality (==)
+----------------------
+Allows type coercion before comparison.
+
+Examples:
+"0" == 0          // true
+false == 0        // true
+"" == 0           // true
+
+2. Strict Equality (===)
+------------------------
+No type conversion occurs.
+
+Examples:
+"0" === 0         // false
+false === 0       // false
+null === undefined // false
+
+3. null vs undefined
+--------------------
+Loose:
+null == undefined      // true
+
+Strict:
+null === undefined     // false
+
+4. NaN is Special
+-----------------
+NaN == NaN             // false
+NaN === NaN            // false
+
+Correct way:
+Object.is(NaN, NaN)    // true
+
+5. Object.is()
+--------------
+More precise than ===
+
+Examples:
+Object.is(NaN, NaN)    // true
+Object.is(+0, -0)      // false
+
+6. Array Coercion
+-----------------
+Arrays often convert to strings.
+
+[1,2,3].toString()
+=> "1,2,3"
+
+Therefore:
+
+[1,2,3] == "1,2,3"    // true
+
+7. The Famous Interview Question
+--------------------------------
+
+null >= 0   // true
+null > 0    // false
+null == 0   // false
+
+Why?
+
+- Relational operators (>, >=, <, <=)
+  convert null to 0.
+
+- Equality operator (==)
+  does NOT convert null to 0.
+
+So:
+
+null >= 0
+0 >= 0
+true
+
+but
+
+null == 0
+false
+
+This behavior comes directly from JavaScript's
+equality and relational comparison rules and is
+one of the most frequently tested interview topics.
+
+*/
+
+
+
+
