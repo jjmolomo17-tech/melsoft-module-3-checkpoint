@@ -964,3 +964,68 @@ issues, especially in complex calculations involving
 multiple arithmetic, comparison, and logical operators.
 
 */
+
+
+
+
+
+/*********************************************************
+ Challenge 4 - Part A
+ Ternary Chain for Grade Conversion (3 Marks)
+
+ Requirements:
+ - Use ONE ternary expression
+ - No if/else
+ - No switch
+
+ Grade Rules:
+ 90 and above = A
+ 80 - 89      = B
+ 70 - 79      = C
+ 60 - 69      = D
+ 50 - 59      = E
+ Below 50     = F
+*********************************************************/
+
+
+// Function to convert percentage to letter grade
+function getGrade(percentage) {
+  return percentage >= 90
+    ? "A"
+    : percentage >= 80
+    ? "B"
+    : percentage >= 70
+    ? "C"
+    : percentage >= 60
+    ? "D"
+    : percentage >= 50
+    ? "E"
+    : "F";
+}
+
+
+// Test percentages provided in the challenge
+const percentages = [95, 82, 73, 65, 54, 42, 0, 100];
+
+console.log("=== Grade Conversion Results ===");
+
+// Loop through each percentage and display result
+percentages.forEach((percentage) => {
+  console.log(
+    `Percentage: ${percentage}% => Grade: ${getGrade(percentage)}`
+  );
+});
+
+
+/*********************************************************
+ Expected Output
+
+ Percentage: 95%  => Grade: A
+ Percentage: 82%  => Grade: B
+ Percentage: 73%  => Grade: C
+ Percentage: 65%  => Grade: D
+ Percentage: 54%  => Grade: E
+ Percentage: 42%  => Grade: F
+ Percentage: 0%   => Grade: F
+ Percentage: 100% => Grade: A
+*********************************************************/
