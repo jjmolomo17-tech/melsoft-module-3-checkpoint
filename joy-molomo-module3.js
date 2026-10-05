@@ -1029,3 +1029,185 @@ percentages.forEach((percentage) => {
  Percentage: 0%   => Grade: F
  Percentage: 100% => Grade: A
 *********************************************************/
+
+
+
+
+
+/*********************************************************
+ Challenge 4 - Part B
+ Short-Circuit Defaults in User Profile (4 Marks)
+
+ Requirements:
+ ✔ displayName defaults to "Guest User" using ||
+ ✔ theme defaults to "light" using ||
+ ✔ maxResults defaults to 10 using ||
+ ✔ lastLogin defaults to "Never" using ??
+ ✔ notificationCount defaults to 0 using ??
+
+ Test with:
+ 1. User object with all fields missing
+ 2. User object where:
+    - notificationCount = 0
+    - theme = ""
+
+ Demonstrates the difference between:
+ - Logical OR (||)
+ - Nullish Coalescing (??)
+*********************************************************/
+
+
+/* =====================================================
+   TEST CASE 1
+   All fields missing
+===================================================== */
+
+const user1 = {};
+
+const profile1 = {
+  // If displayName is undefined, use default
+  displayName: user1.displayName || "Guest User",
+
+  // If theme is undefined, use default
+  theme: user1.theme || "light",
+
+  // If maxResults is undefined, use default
+  maxResults: user1.maxResults || 10,
+
+  // Only defaults when value is null or undefined
+  lastLogin: user1.lastLogin ?? "Never",
+
+  // Only defaults when value is null or undefined
+  notificationCount: user1.notificationCount ?? 0,
+};
+
+console.log("===== USER 1 =====");
+console.log(profile1);
+
+
+
+/* =====================================================
+   TEST CASE 2
+   theme = ""
+   notificationCount = 0
+===================================================== */
+
+const user2 = {
+  displayName: "Joy Molomo",
+  theme: "",                 // Empty string
+  maxResults: 25,
+  lastLogin: "2025-09-15",
+  notificationCount: 0,      // Valid value
+};
+
+const profile2 = {
+  displayName: user2.displayName || "Guest User",
+
+  // || treats "" as falsey, so "light" is used
+  theme: user2.theme || "light",
+
+  maxResults: user2.maxResults || 10,
+
+  // ?? only checks for null or undefined
+  lastLogin: user2.lastLogin ?? "Never",
+
+  // 0 is NOT null or undefined
+  // therefore 0 is kept
+  notificationCount: user2.notificationCount ?? 0,
+};
+
+console.log("\n===== USER 2 =====");
+console.log(profile2);
+
+
+
+/*********************************************************
+ EXPLANATION OF || VS ??
+*********************************************************/
+
+/*
+
+LOGICAL OR (||)
+===============
+Returns the value on the right when the value on the
+left is "falsey".
+
+Falsey values include:
+
+false
+0
+""
+null
+undefined
+NaN
+
+Example:
+
+"" || "light"
+
+Result:
+"light"
+
+Because an empty string ("") is considered falsey.
+
+
+
+NULLISH COALESCING (??)
+=======================
+Returns the value on the right ONLY when the value on
+the left is:
+
+null
+undefined
+
+Example:
+
+0 ?? 10
+
+Result:
+0
+
+Because 0 is not null or undefined.
+
+
+
+WHY THE RESULTS DIFFER
+======================
+
+For theme:
+
+theme: "" || "light"
+
+Result:
+"light"
+
+The empty string is falsey, so || uses the default.
+
+
+For notificationCount:
+
+notificationCount: 0 ?? 0
+
+Result:
+0
+
+The value 0 is a valid number and is NOT null or
+undefined, so ?? keeps the original value.
+
+
+INTERVIEW TIP
+=============
+
+Use || when you want to replace ANY falsey value.
+
+Use ?? when you only want to replace null or undefined
+while preserving valid values like:
+
+0
+false
+""
+
+This makes ?? safer for numbers, counters, settings,
+and API responses.
+
+*/
