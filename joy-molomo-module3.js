@@ -1317,10 +1317,10 @@ null or undefined.
  Instructions:
  For each expression:
 
- ✅ Predict the OUTPUT
- ✅ Predict the TYPE
- ✅ Explain WHY
- ✅ Verify using console.log()
+  Predict the OUTPUT
+  Predict the TYPE
+  Explain WHY
+  Verify using console.log()
 *********************************************************/
 
 
@@ -1529,3 +1529,227 @@ console.log("Type:", typeof (null?.foo?.bar?.baz));
    they are considered falsey by ||.
 
 *********************************************************/
+
+
+
+
+
+/*********************************************************
+ Challenge 5 - Part A
+ typeof Mastery (3 Marks)
+
+ Instructions:
+  Predict the output
+  Verify using console.log()
+  Explain why
+
+ Note:
+ typeof is useful for checking data types, but it has
+ some famous JavaScript quirks that interviewers love
+ to ask about.
+*********************************************************/
+
+
+/* =====================================================
+   1. typeof 42
+===================================================== */
+
+// Prediction: "number"
+// Reason: 42 is a numeric value.
+
+console.log("1:", typeof 42);
+
+
+
+/* =====================================================
+   2. typeof "hello"
+===================================================== */
+
+// Prediction: "string"
+// Reason: Text values are strings.
+
+console.log("2:", typeof "hello");
+
+
+
+/* =====================================================
+   3. typeof true
+===================================================== */
+
+// Prediction: "boolean"
+// Reason: true and false are Boolean values.
+
+console.log("3:", typeof true);
+
+
+
+/* =====================================================
+   4. typeof undefined
+===================================================== */
+
+// Prediction: "undefined"
+// Reason: The value undefined has its own type.
+
+console.log("4:", typeof undefined);
+
+
+
+/* =====================================================
+   5. typeof null
+===================================================== */
+
+// Prediction: "object"
+// Reason:
+// This is JavaScript's most famous bug.
+// null is NOT actually an object, but typeof returns
+// "object" due to a legacy design mistake.
+
+console.log("5:", typeof null);
+
+
+
+/* =====================================================
+   6. typeof {}
+===================================================== */
+
+// Prediction: "object"
+// Reason: Plain objects return "object".
+
+console.log("6:", typeof {});
+
+
+
+/* =====================================================
+   7. typeof []
+===================================================== */
+
+// Prediction: "object"
+// Reason:
+// Arrays are special objects in JavaScript.
+
+console.log("7:", typeof []);
+
+
+
+/* =====================================================
+   8. typeof function() {}
+===================================================== */
+
+// Prediction: "function"
+// Reason:
+// Functions have their own special typeof result.
+
+console.log("8:", typeof function () {});
+
+
+
+/* =====================================================
+   9. typeof NaN
+===================================================== */
+
+// Prediction: "number"
+// Reason:
+// NaN stands for "Not a Number" but is actually
+// considered a numeric type.
+
+console.log("9:", typeof NaN);
+
+
+
+/* =====================================================
+   10. typeof undeclaredVariable
+===================================================== */
+
+// Prediction: "undefined"
+// Reason:
+// typeof safely checks undeclared variables and does
+// NOT throw a ReferenceError.
+
+console.log("10:", typeof undeclaredVariable);
+
+
+
+/*********************************************************
+ ARRAY VS OBJECT
+*********************************************************/
+
+/*
+
+typeof []      -> "object"
+typeof {}      -> "object"
+
+Because both return "object", typeof alone cannot
+distinguish between them.
+
+Correct one-liner:
+
+*/
+
+const value = [1, 2, 3];
+
+console.log(Array.isArray(value));
+
+
+
+/*********************************************************
+ BETTER EXAMPLES
+*********************************************************/
+
+// Array check
+console.log(Array.isArray([1, 2, 3])); // true
+
+// Object check
+console.log(Array.isArray({})); // false
+
+
+
+/*********************************************************
+ INTERVIEW NOTES
+*********************************************************/
+
+/*
+
+typeof Results Summary
+
+typeof 42                -> "number"
+typeof "hello"           -> "string"
+typeof true              -> "boolean"
+typeof undefined         -> "undefined"
+typeof null              -> "object"   <-- famous bug
+typeof {}                -> "object"
+typeof []                -> "object"   <-- common trap
+typeof function() {}     -> "function"
+typeof NaN               -> "number"
+typeof undeclaredVar     -> "undefined"
+
+Most Important Interview Gotchas
+
+1. typeof null
+--------------
+Returns "object" even though null is not an object.
+
+2. typeof []
+-------------
+Returns "object" because arrays are specialized objects.
+
+3. typeof NaN
+-------------
+Returns "number" even though the name suggests otherwise.
+
+4. typeof undeclaredVariable
+----------------------------
+Returns "undefined" and does NOT throw an error.
+
+This behavior makes typeof useful when checking whether
+a variable exists before using it.
+
+Best Way to Detect Arrays
+
+Array.isArray(value)
+
+Examples:
+
+Array.isArray([]);   // true
+Array.isArray({});   // false
+
+*/
