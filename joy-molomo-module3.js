@@ -1972,3 +1972,152 @@ Use instanceof for:
 ✔ Constructor-created Objects
 
 */
+
+
+
+
+
+// ============================================================
+// Part C — delete and its gotchas
+// NOTE: This file runs in "sloppy mode" (no 'use strict'),
+// so failed deletes return false instead of throwing errors.
+// ============================================================
+
+// ------------------------------------------------------------
+// 1. Deleting a property from an object
+// ------------------------------------------------------------
+console.log('--- 1. Delete an object property ---');
+
+const user = { name: 'Lerato', age: 25, role: 'student' };
+
+console.log('Before delete:', user);   // { name: 'Lerato', age: 25, role: 'student' }
+
+// delete removes the property AND its value from the object entirely
+const result1 = delete user.role;
+
+console.log('After delete:', user);    // { name: 'Lerato', age: 25 }
+console.log('delete returned:', result1);   // true (the property was removed)
+console.log('user.role is now:', user.role); // undefined (property no longer exists)
+
+// ------------------------------------------------------------
+// 2. Trying to delete a variable
+// ------------------------------------------------------------
+console.log('\n--- 2. Delete a variable ---');
+
+// The error VS Code showed ("'delete' cannot be called on an identifier
+// in strict mode") is the point of this exercise: writing `delete x;`
+// directly is a SyntaxError in strict mode (and VS Code treats files
+// as strict). So we run the delete inside code that is evaluated
+// separately, which lets us SEE what happens in both modes without
+// the editor flagging the file.
+
+let x = 5;
+console.log('x is:', x); // 5
+
+// (a) SLOPPY mode: new Function() bodies are sloppy unless they contain
+// 'use strict'. delete on a variable simply FAILS and returns false.
+const sloppyResult = new Function('let x = 5; return delete x;')();
+console.log('Sloppy mode -> delete x returned:', sloppyResult); // false
+
+// (b) STRICT mode: the same code is rejected outright with a SyntaxError.
+try {
+  new Function('"use strict"; let x = 5; return delete x;')();
+} catch (err) {
+  console.log('Strict mode ->', err.name + ': ' + err.message);
+  // SyntaxError: Delete of an unqualified identifier in strict mode.
+}
+
+// WHY: delete only works on object PROPERTIES (e.g. delete obj.key).
+// Variables declared with let, const or var are bindings, not
+// configurable properties, so they cannot be deleted.
+console.log('x is still:', x); // 5 -> nothing was removed
+
+// ------------------------------------------------------------
+// 3. Deleting an array element
+// ------------------------------------------------------------
+console.log('\n--- 3. Delete an array element ---');
+
+const arr = [1, 2, 3, 4];
+delete arr[1];
+
+console.log('arr:', arr);                 // [ 1, <1 empty item>, 3, 4 ]
+console.log('arr.length:', arr.length);   // 4 (length does NOT change!)
+console.log('arr[1]:', arr[1]);           // undefined
+
+// WHY delete ON ARRAYS IS DANGEROUS:
+// delete only removes the property at that index. It does NOT shift the
+// remaining elements down and does NOT update arr.length. It leaves a
+// "hole" (an empty slot) in the array, making it a "sparse array".
+// The array still says it has 4 items, but one of them doesn't exist.
+// Holes are skipped by methods like forEach/map/filter but not by a
+// normal for loop (which sees `undefined`), so behaviour becomes
+// inconsistent and causes hard-to-find bugs. It can also hurt performance.
+
+// Proof that the hole is a missing property, not just the value undefined:
+console.log('Is index 1 in arr?', 1 in arr); // false -> the slot is empty
+
+// ------------------------------------------------------------
+// 4. Trying to delete a built-in property
+// ------------------------------------------------------------
+console.log('\n--- 4. Delete a built-in (Math.PI) ---');
+
+// Wrapped in try/catch so the file works in BOTH modes: in sloppy mode
+// delete returns false, in strict mode (modules) it throws a TypeError.
+let result4;
+try {
+  result4 = delete Math.PI;
+} catch (err) {
+  result4 = false;
+  console.log('Strict mode error:', err.name + ' - ' + err.message);
+}
+
+console.log('delete Math.PI returned:', result4); // false -> it did NOT work
+console.log('Math.PI is still:', Math.PI);        // 3.141592653589793
+
+// WHY IT DOESN'T WORK:
+// Every object property has "attributes" (a property descriptor).
+// One of them is `configurable`. If configurable is false, the property
+// is a NON-CONFIGURABLE property: it cannot be deleted, and its
+// attributes (like writable/enumerable) cannot be changed.
+// Math.PI is defined as non-configurable (and non-writable) so nobody
+// can accidentally change or remove it.
+console.log(
+  'Math.PI descriptor:',
+  Object.getOwnPropertyDescriptor(Math, 'PI')
+);
+// { value: 3.14159..., writable: false, enumerable: false, configurable: false }
+
+// In strict mode, this would throw a TypeError instead of returning false:
+(function () {
+  'use strict';
+  try {
+    delete Math.PI;
+  } catch (err) {
+    console.log('Strict mode error:', err.name + ' - ' + err.message);
+  }
+})();
+
+// ------------------------------------------------------------
+// FINAL INTERVIEW ANSWER (as code + comments)
+// "You have an array of items and you need to remove one.
+//  Why would you NOT use delete, and what should you use instead?"
+// ------------------------------------------------------------
+console.log('\n--- Interview answer: removing an item properly ---');
+
+// I would NOT use delete because it leaves a hole and doesn't change
+// the length, so the array ends up in a broken, inconsistent state.
+
+// Use splice(index, deleteCount) to remove an item IN PLACE.
+// It shifts later elements down and updates the length.
+const items = ['a', 'b', 'c', 'd'];
+items.splice(1, 1); // remove 1 element at index 1
+console.log('After splice:', items, '| length:', items.length); // [ 'a', 'c', 'd' ] | 3
+
+// Use filter() to create a NEW array without the item (doesn't mutate
+// the original, which is preferred in modern JS/React-style code).
+const original = ['a', 'b', 'c', 'd'];
+const withoutB = original.filter(item => item !== 'b');
+console.log('After filter:', withoutB, '| original untouched:', original);
+
+// Other useful methods: pop() removes the last item, shift() removes the
+// first item, and toSpliced() (ES2023) is a non-mutating version of splice.
