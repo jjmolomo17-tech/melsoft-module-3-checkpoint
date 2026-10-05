@@ -614,9 +614,9 @@ function validatePasswordReset(
   ------------------------------------- */
 
   if (newPassword === confirmPassword) {
-    console.log("✅ PASS: Passwords match exactly.");
+    console.log(" PASS: Passwords match exactly.");
   } else {
-    console.log("❌ FAIL: Passwords do not match.");
+    console.log(" FAIL: Passwords do not match.");
   }
 
   /* -------------------------------------
@@ -625,9 +625,9 @@ function validatePasswordReset(
   ------------------------------------- */
 
   if (currentEmail === confirmEmail) {
-    console.log("✅ PASS: Emails match exactly.");
+    console.log(" PASS: Emails match exactly.");
   } else {
-    console.log("❌ FAIL: Emails do not match.");
+    console.log(" FAIL: Emails do not match.");
   }
 
   /* -------------------------------------
@@ -636,10 +636,10 @@ function validatePasswordReset(
   ------------------------------------- */
 
   if (newPassword !== currentEmail) {
-    console.log("✅ PASS: Password is different from email.");
+    console.log(" PASS: Password is different from email.");
   } else {
     console.log(
-      "❌ FAIL: Password should not be the same as your email."
+      " FAIL: Password should not be the same as your email."
     );
   }
 
@@ -649,10 +649,10 @@ function validatePasswordReset(
   ------------------------------------- */
 
   if (newPassword.length >= 8) {
-    console.log("✅ PASS: Password is at least 8 characters.");
+    console.log(" PASS: Password is at least 8 characters.");
   } else {
     console.log(
-      "❌ FAIL: Password must be at least 8 characters."
+      " FAIL: Password must be at least 8 characters."
     );
   }
 }
@@ -726,5 +726,241 @@ Reason:
 without performing
 
 
+
+*/
+
+
+
+
+
+
+/*********************************************************
+ Challenge 3 - Operator Precedence (10 Marks)
+
+ Instructions:
+ For each expression:
+ ✅ Prediction
+ ✅ Step-by-step evaluation order
+ ✅ Console output verification
+*********************************************************/
+
+
+/* =====================================================
+   1. 2 + 3 * 4 - 1
+===================================================== */
+
+// Prediction: 13
+// Step 1: 3 * 4 = 12
+// Step 2: 2 + 12 = 14
+// Step 3: 14 - 1 = 13
+
+console.log("1:", 2 + 3 * 4 - 1);
+
+
+
+/* =====================================================
+   2. (2 + 3) * (4 - 1)
+===================================================== */
+
+// Prediction: 15
+// Step 1: (2 + 3) = 5
+// Step 2: (4 - 1) = 3
+// Step 3: 5 * 3 = 15
+
+console.log("2:", (2 + 3) * (4 - 1));
+
+
+
+/* =====================================================
+   3. 10 - 4 - 2
+===================================================== */
+
+// Prediction: 4
+// Step 1: 10 - 4 = 6
+// Step 2: 6 - 2 = 4
+// Note: Subtraction is left-to-right.
+
+console.log("3:", 10 - 4 - 2);
+
+
+
+/* =====================================================
+   4. 2 ** 3 ** 2
+===================================================== */
+
+// Prediction: 512
+// Step 1: 3 ** 2 = 9
+// Step 2: 2 ** 9 = 512
+// Exponentiation is RIGHT-ASSOCIATIVE.
+
+console.log("4:", 2 ** 3 ** 2);
+
+
+
+/* =====================================================
+   5. 10 % 3 * 2 + 1
+===================================================== */
+
+// Prediction: 3
+// Step 1: 10 % 3 = 1
+// Step 2: 1 * 2 = 2
+// Step 3: 2 + 1 = 3
+
+console.log("5:", 10 % 3 * 2 + 1);
+
+
+
+/* =====================================================
+   6. 100 / 4 / 5
+===================================================== */
+
+// Prediction: 5
+// Step 1: 100 / 4 = 25
+// Step 2: 25 / 5 = 5
+// Division is left-to-right.
+
+console.log("6:", 100 / 4 / 5);
+
+
+
+/* =====================================================
+   7. 5 + 2 > 6 && 3 < 4
+===================================================== */
+
+// Prediction: true
+// Step 1: 5 + 2 = 7
+// Step 2: 7 > 6 = true
+// Step 3: 3 < 4 = true
+// Step 4: true && true = true
+
+console.log("7:", 5 + 2 > 6 && 3 < 4);
+
+
+
+/* =====================================================
+   8. true && false || true && true
+===================================================== */
+
+// Prediction: true
+// Step 1: true && false = false
+// Step 2: true && true = true
+// Step 3: false || true = true
+// && executes before ||
+
+console.log("8:", true && false || true && true);
+
+
+
+/* =====================================================
+   9. !false && !!0
+===================================================== */
+
+// Prediction: false
+// Step 1: !false = true
+// Step 2: !0 = true
+// Step 3: !true = false
+// Step 4: true && false = false
+
+console.log("9:", !false && !!0);
+
+
+
+/* =====================================================
+   10. 5 > 3 && 10 < 20 || !(2 === "2")
+===================================================== */
+
+// Prediction: true
+// Step 1: 5 > 3 = true
+// Step 2: 10 < 20 = true
+// Step 3: true && true = true
+// Step 4: 2 === "2" = false
+// Step 5: !false = true
+// Step 6: true || true = true
+
+console.log("10:", 5 > 3 && 10 < 20 || !(2 === "2"));
+
+
+
+/* =====================================================
+   11. 1000 * 1.15 * 0.9
+===================================================== */
+
+// Prediction: 1035
+// Step 1: 1000 * 1.15 = 1150
+// Step 2: 1150 * 0.9 = 1035
+
+console.log("11:", 1000 * 1.15 * 0.9);
+
+
+
+/* =====================================================
+   12. typeof 5 + 1
+===================================================== */
+
+// Prediction: "number1"
+// Step 1: typeof 5 = "number"
+// Step 2: "number" + 1 = "number1"
+// String concatenation occurs.
+
+console.log("12:", typeof 5 + 1);
+
+
+
+/* =====================================================
+   13. typeof (5 + 1)
+===================================================== */
+
+// Prediction: "number"
+// Step 1: (5 + 1) = 6
+// Step 2: typeof 6 = "number"
+
+console.log("13:", typeof (5 + 1));
+
+
+
+/* =====================================================
+   14. "5" + 3 * 2
+===================================================== */
+
+// Prediction: "56"
+// Step 1: 3 * 2 = 6
+// Step 2: "5" + 6 = "56"
+// + performs string concatenation.
+
+console.log("14:", "5" + 3 * 2);
+
+
+
+/* =====================================================
+   15. "5" - 3 + 2
+===================================================== */
+
+// Prediction: 4
+// Step 1: "5" - 3 = 2
+// Step 2: 2 + 2 = 4
+// The - operator converts strings to numbers.
+
+console.log("15:", "5" - 3 + 2);
+
+
+
+/*********************************************************
+ INTERVIEW ANSWER
+*********************************************************/
+
+/*
+
+Q: When should you add parentheses to an expression
+even when they are not strictly needed by precedence rules?
+
+Answer:
+
+Parentheses should be added whenever they make the
+expression easier for other developers to read and
+understand. Even if JavaScript's precedence rules will
+produce the correct result, explicit parentheses reduce
+the chance of misunderstandings, bugs, and maintenance
+issues, especially in complex calculations involving
+multiple arithmetic, comparison, and logical operators.
 
 */
