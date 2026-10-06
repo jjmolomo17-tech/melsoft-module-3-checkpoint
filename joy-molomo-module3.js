@@ -2611,3 +2611,106 @@ console.log('After filter:', withoutB, '| original untouched:', original);
 5. subtotal used string values, causing concatenation instead of arithmetic.
 
 6. subtotal relied on */
+
+
+
+
+
+
+/*
+=====================================================
+CHALLENGE 10 – SELF REFLECTION
+=====================================================
+
+1. Walk me through the difference between the single-character operators (& and |)
+and the double-character operators (&& and ||). Give one case where confusing
+them would cause a silent production bug.
+
+The single-character operators (& and |) are bitwise operators. They compare
+numbers at the binary level by examining each individual bit. The double-
+character operators (&& and ||) are logical operators that work with boolean
+values and are commonly used in conditional statements. A silent production bug
+could happen if a developer accidentally uses & instead of && when checking user
+permissions. For example, using
+isLoggedIn & isAdmin
+instead of
+isLoggedIn && isAdmin
+could produce unexpected results because JavaScript performs a bitwise operation
+rather than a logical check, and the code may still run without throwing an
+error.
+
+-----------------------------------------------------
+
+2. When would you prefer the nullish coalescing operator (??) over the logical
+OR operator (||)? Give a concrete example where swapping one for the other
+changes the outcome.
+
+I would use the nullish coalescing operator (??) when I only want to replace
+null or undefined values. The logical OR operator (||) treats all falsy values
+such as 0, false, and an empty string as missing values. For example:
+
+let score = 0;
+
+let result1 = score || 100;   // Returns 100
+let result2 = score ?? 100;   // Returns 0
+
+In this case, 0 is a valid value. Using || incorrectly replaces it with 100,
+while ?? correctly keeps the value 0.
+
+-----------------------------------------------------
+
+3. typeof null returns 'object'. Explain WHY (the historical reason), and then
+describe how you would check if a variable is specifically null without being
+tricked.
+
+typeof null returns "object" because of a bug in the earliest implementation of
+JavaScript. The bug became part of the language specification, and changing it
+now would break older applications that rely on the existing behavior. To check
+if a variable is specifically null, I would use strict equality:
+
+if (value === null) {
+    // value is exactly null
+}
+
+Using strict equality avoids being tricked by undefined or other values.
+
+-----------------------------------------------------
+
+4. In your banking calculator for Challenge 7, you had to handle floating-point
+arithmetic for money. Explain in your own words why 0.1 + 0.2 does NOT equal
+0.3 in JavaScript, and what the production-grade solution would be.
+
+JavaScript stores numbers using the IEEE 754 floating-point format. Many decimal
+values cannot be represented exactly in binary, so small rounding errors occur.
+As a result:
+
+0.1 + 0.2
+
+returns:
+
+0.30000000000000004
+
+instead of exactly 0.3.
+
+In a production banking system, I would not store money as floating-point
+numbers. Instead, I would store the smallest currency unit, such as cents, as
+integers. For example, R10.50 would be stored as 1050 cents. This prevents
+rounding errors and ensures accurate financial calculations.
+
+-----------------------------------------------------
+
+5. What was the single hardest Module 3 concept for you to grasp, and what
+finally made it click?
+
+The hardest concept for me was understanding type coercion and how JavaScript
+automatically converts values during comparisons and calculations. At first, it
+was confusing why some expressions produced unexpected results even though the
+code seemed correct. What made it click was practicing examples using strings,
+numbers, booleans, null, and undefined while comparing the results of == and
+===. Seeing the actual outputs helped me understand when JavaScript performs
+automatic conversions and why strict equality is usually the safer choice.
+
+=====================================================
+END OF CHALLENGE 10
+=====================================================
+*/
