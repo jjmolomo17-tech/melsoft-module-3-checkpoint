@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 8 - User Interaction</title>
+</head>
+<body>
+
+    <script>
+        // 1. Greet the user with a welcome message
+        window.alert("Welcome to our Membership Registration System!");
+
+        // 2. Ask for the user's name
+        let name = window.prompt("Please enter your name:");
+
+        // If the user clicks Cancel or leaves the input blank,
+        // assign the default name "Guest"
+        if (name === null || name.trim() === "") {
+            name = "Guest";
+        }
+
+        // 3. Ask for the user's age
+        let ageInput = window.prompt("Please enter your age:");
+
+        // Convert the input to a number
+        let age = Number(ageInput);
+
+        // Validate the age
+        while (isNaN(age) || age < 1 || age > 120) {
+            ageInput = window.prompt(
+                "Invalid age! Please enter a number between 1 and 120:"
+            );
+            age = Number(ageInput);
+        }
+
+        // 4. Use the ternary operator to assign a membership tier
+        let membershipTier =
+            age < 18 ? "Youth" :
+            age <= 59 ? "Adult" :
+            "Senior";
+
+        // 5. Ask if the user wants to subscribe to the newsletter
+        let isSubscribed = window.confirm(
+            "Do you want to subscribe to our newsletter?"
+        );
+
+        // Convert the boolean result into a readable message
+        let subscriptionStatus = isSubscribed ? "Subscribed" : "Not Subscribed";
+
+        // 6. Display a summary to the user
+        window.alert(
+            "Registration Summary\n\n" +
+            "Name: " + name + "\n" +
+            "Age: " + age + "\n" +
+            "Membership Tier: " + membershipTier + "\n" +
+            "Newsletter Status: " + subscriptionStatus
+        );
+    </script>
+
+</body>
+</html>
