@@ -2498,6 +2498,9 @@ console.log('After filter:', withoutB, '| original untouched:', original);
   //    values forward, because it returns a string.
   //  - In production, you would use integer cents everywhere or a decimal
   //    library (like decimal.js) or BigInt, and never compare floats with ===.
+
+
+
 }
 
 
@@ -2505,7 +2508,43 @@ console.log('After filter:', withoutB, '| original untouched:', original);
 
 
 
+// =====================================================
+// CHALLENGE 9
+// =====================================================
 
+{
+    const item1Price = 199.99;
+    const item2Price = 49.50;
+    const item3Price = 125;
 
+    const quantity = 2;
+    const discountCode = "SAVE10";
 
+    const cartIsLoggedIn = true;
+    const cartCustomerAge = 25;
 
+    const subtotal =
+        (item1Price * quantity) +
+        (item2Price * quantity) +
+        (item3Price * quantity);
+
+    const discount =
+        discountCode === "SAVE10" ? 0.10 : 0;
+
+    const discountAmount = subtotal * discount;
+    const afterDiscount = subtotal - discountAmount;
+    const vat = afterDiscount * 0.15;
+    const total = afterDiscount + vat;
+
+    const canCheckout =
+        cartIsLoggedIn && cartCustomerAge > 18;
+
+    const seniorDiscount =
+        cartCustomerAge >= 60 ? total * 0.05 : 0;
+
+    const finalTotal = total - seniorDiscount;
+
+    console.log("Subtotal:", subtotal);
+    console.log("Can checkout?", canCheckout);
+    console.log("Total: R" + finalTotal.toFixed(2));
+}
