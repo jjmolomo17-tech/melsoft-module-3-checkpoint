@@ -2509,42 +2509,105 @@ console.log('After filter:', withoutB, '| original untouched:', original);
 
 
 // =====================================================
-// CHALLENGE 9
+// CHALLENGE 9 – BUG HUNT
+// Corrected Version with Comments
 // =====================================================
 
 {
-    const item1Price = 199.99;
-    const item2Price = 49.50;
-    const item3Price = 125;
+    // Store item prices as NUMBERS, not strings
+    const cartItem1Price = 199.99;
+    const cartItem2Price = 49.50;
+    const cartItem3Price = 125;
 
-    const quantity = 2;
-    const discountCode = "SAVE10";
+    // Quantity should be a number
+    const cartQuantity = 2;
 
+    // Discount code entered by the customer
+    const cartDiscountCode = "SAVE10";
+
+    // Boolean value instead of the string "true"
     const cartIsLoggedIn = true;
-    const cartCustomerAge = 25;
 
-    const subtotal =
-        (item1Price * quantity) +
-        (item2Price * quantity) +
-        (item3Price * quantity);
+    // Customer age
+    // Use nullish coalescing (??) to provide a default age if value is null
+    let cartCustomerAge = null;
+    cartCustomerAge = cartCustomerAge ?? 25;
 
-    const discount =
-        discountCode === "SAVE10" ? 0.10 : 0;
+    // -------------------------------------------------
+    // Calculate subtotal
+    // Multiply each item price by quantity, then add
+    // -------------------------------------------------
+    const cartSubtotal =
+        (cartItem1Price * cartQuantity) +
+        (cartItem2Price * cartQuantity) +
+        (cartItem3Price * cartQuantity);
 
-    const discountAmount = subtotal * discount;
-    const afterDiscount = subtotal - discountAmount;
-    const vat = afterDiscount * 0.15;
-    const total = afterDiscount + vat;
+    console.log("Subtotal:", cartSubtotal);
 
-    const canCheckout =
+    // -------------------------------------------------
+    // Apply discount using STRICT equality (===)
+    // -------------------------------------------------
+    const cartDiscount =
+        cartDiscountCode === "SAVE10" ? 0.10 : 0;
+
+    const cartDiscountAmount =
+        cartSubtotal * cartDiscount;
+
+    const cartAfterDiscount =
+        cartSubtotal - cartDiscountAmount;
+
+    // -------------------------------------------------
+    // Calculate VAT (15%)
+    // -------------------------------------------------
+    const cartVat =
+        cartAfterDiscount * 0.15;
+
+    // Total after VAT
+    const cartTotal =
+        cartAfterDiscount + cartVat;
+
+    // -------------------------------------------------
+    // Checkout validation
+    // Customer must be logged in and older than 18
+    // -------------------------------------------------
+    const cartCanCheckout =
         cartIsLoggedIn && cartCustomerAge > 18;
 
-    const seniorDiscount =
-        cartCustomerAge >= 60 ? total * 0.05 : 0;
+    console.log("Can checkout?", cartCanCheckout);
 
-    const finalTotal = total - seniorDiscount;
+    // -------------------------------------------------
+    // Senior discount
+    // Customers aged 60+ receive 5% discount
+    // Otherwise discount is 0
+    // -------------------------------------------------
+    const cartSeniorDiscount =
+        cartCustomerAge >= 60
+            ? cartTotal * 0.05
+            : 0;
 
-    console.log("Subtotal:", subtotal);
-    console.log("Can checkout?", canCheckout);
-    console.log("Total: R" + finalTotal.toFixed(2));
+    // Final amount payable
+    const cartFinalTotal =
+        cartTotal - cartSeniorDiscount;
+
+    // Display final total rounded to 2 decimal places
+    console.log(
+        "Total: R" + cartFinalTotal.toFixed(2)
+    );
 }
+
+// =====================================================
+// BUGS FOUND IN THE ORIGINAL SCRIPT
+// =====================================================
+
+/*
+1. item1Price was stored as a string instead of a number.
+
+2. item2Price was stored as a string instead of a number.
+
+3. quantity was stored as a string instead of a number.
+
+4. isLoggedIn was stored as the string "true" instead of the boolean true.
+
+5. subtotal used string values, causing concatenation instead of arithmetic.
+
+6. subtotal relied on */
